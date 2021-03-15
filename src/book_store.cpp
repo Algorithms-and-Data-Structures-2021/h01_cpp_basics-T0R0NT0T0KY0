@@ -15,7 +15,7 @@ ResizeStorageStatus resize_storage(Book *&storage, int size, int new_capacity) {
     }
 
     Book *newStorage = new Book[new_capacity];
-	std::copy(storage,storage+size-1,newStorage);
+	std::copy(storage,storage+size,newStorage);
 	delete[] storage;
 	storage = newStorage;
 
@@ -43,10 +43,10 @@ BookStore::~BookStore() {
   // здесь мог бы быть ваш высвобождающий разум от негатива код ...
   // Tip 1: я свободен ..., словно память в куче: не забудьте обнулить указатель
     delete[] storage_;
-    storage_ = nullptr;
 //    name_ = nullptr;
-    storage_capacity_=0;
-    storage_size_=0;
+	storage_capacity_=0;
+	storage_size_=0;
+	storage_ = nullptr;
 }
 
 // 4. реализуйте метод ...
