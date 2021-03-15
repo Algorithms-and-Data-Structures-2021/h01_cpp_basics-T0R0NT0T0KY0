@@ -8,10 +8,10 @@ ResizeStorageStatus resize_storage(Book *&storage, int size, int new_capacity) {
   // здесь мог бы быть ваш разносторонний и многогранный код ...
     if (storage== nullptr){
         return ResizeStorageStatus::NULL_STORAGE;
-    } else if(new_capacity<0){
-        return ResizeStorageStatus::NEGATIVE_SIZE;
     } else if (new_capacity<=size){
-        return ResizeStorageStatus::INSUFFICIENT_CAPACITY;
+	    return ResizeStorageStatus::INSUFFICIENT_CAPACITY;
+    } else if(size<0){
+        return ResizeStorageStatus::NEGATIVE_SIZE;
     }
 
     Book *newStorage = new Book[new_capacity];
@@ -29,11 +29,11 @@ BookStore::BookStore(const std::string &name) : name_{name} {
     // валидация аргумента
     if (name.empty()) {
       throw std::invalid_argument("BookStore::name must not be empty");
+    } else{
+	    name_ = name;
+	    storage_capacity_ =  kInitStorageCapacity;
+	    storage_ = new Book[storage_capacity_];
     }
-
-    name_ = name;
-    storage_capacity_ =  kInitStorageCapacity;
-    storage_ = new Book[kInitStorageCapacity];
 
   // здесь мог бы быть ваш сотрясающий землю и выделяющий память код ...
 }
@@ -44,25 +44,24 @@ BookStore::~BookStore() {
   // Tip 1: я свободен ..., словно память в куче: не забудьте обнулить указатель
     delete[] storage_;
     storage_ = nullptr;
-    name_ = nullptr;
+//    name_ = nullptr;
     storage_capacity_=0;
     storage_size_=0;
 }
 
 // 4. реализуйте метод ...
  void BookStore::AddBook(const Book &book) {
-	if (BookStore::storage_== nullptr){
 
-	}
-
-	if (storage_size_ >= storage_capacity_) {
-		if (resize_storage_internal(storage_capacity_+kCapacityCoefficient)!=ResizeStorageStatus::SUCCESS){
+	if (storage_size_ == storage_capacity_) {
+		ResizeStorageStatus status =resize_storage_internal(storage_capacity_+kCapacityCoefficient);
+		if (status != ResizeStorageStatus::SUCCESS){
 			throw std::invalid_argument("");
 		}
+	}
           // здесь мог бы быть ваш умопомрачительный код ...
           // Tip 1: используйте функцию resize_storage_internal, задав новый размер хранилища
           // Tip 2: не забудьте обработать статус вызова функции
-      }
+
     storage_[storage_size_] = book;
     storage_size_++;
     // Tip 3: не забудьте добавить книгу в наше бездонное хранилище ...
